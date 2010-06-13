@@ -160,26 +160,26 @@ void convert(const char * input_file, const char * output_file)
 	fclose(fpo);
 }
 
-void show_version()
+void show_version(FILE *out)
 {
-	fprintf(stderr, "\nOpen Chinese Convert (OpenCC) Command Line Tool\nVersion %s\n\n",VERSION);
+	fprintf(out, "\nOpen Chinese Convert (OpenCC) Command Line Tool\nVersion %s\n\n",VERSION);
 }
 
-void show_usage()
+void show_usage(FILE *out)
 {
-	show_version();
-	fprintf(stderr, "Usage:\n");
-	fprintf(stderr, "  opencc [-i input_file] [-o output_file]\n\n");
-	fprintf(stderr, "    -i\n");
-	fprintf(stderr, "      Read original text from input_file.\n");
-	fprintf(stderr, "    -o\n");
-	fprintf(stderr, "      Write converted text to output_file.\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "  Note:\n");
-	fprintf(stderr, "    Text from standard input will be read if input_file is not set\n");
-	fprintf(stderr, "    and will be written to standard output if output_file is not set.\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "\n");
+	show_version(out);
+	fprintf(out, "Usage:\n");
+	fprintf(out, "  opencc [-i input_file] [-o output_file]\n\n");
+	fprintf(out, "    -i\n");
+	fprintf(out, "      Read original text from input_file.\n");
+	fprintf(out, "    -o\n");
+	fprintf(out, "      Write converted text to output_file.\n");
+	fprintf(out, "\n");
+	fprintf(out, "  Note:\n");
+	fprintf(out, "    Text from standard input will be read if input_file is not set\n");
+	fprintf(out, "    and will be written to standard output if output_file is not set.\n");
+	fprintf(out, "\n");
+	fprintf(out, "\n");
 }
 
 int main(int argc, char ** argv)
@@ -192,20 +192,22 @@ int main(int argc, char ** argv)
 		switch (oc)
 		{
 		case 'v':
-			show_version();
-			return;
+			show_version(stdout);
+			return 0;
 		case 'h':
+			show_usage(stdout);
+			return 0;
 		case '?':
-			show_usage();
-			return;
+			show_usage(stderr);
+			return 1;
 		case '-':
 			if (strcmp(optarg, "version") == 0)
-				show_version();
+				show_version(stdout);
 			else if (strcmp(optarg, "help") == 0)
-				show_usage();
+				show_usage(stdout);
 			else
-				show_usage();
-			return;
+				show_usage(stdout);
+			return 0;
 		case 'i':
 			strcpy(input_file, optarg);
 			break;
